@@ -1,6 +1,7 @@
 const express = require('express');
 const { User } = require('../models/users');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const authUser = async(req, res) => {
@@ -25,7 +26,14 @@ const authUser = async(req, res) => {
        return res.status(400).send("User not found! User naming or password is incorrect!");
    }
 
-   res.send("Lgin Successful!");
+   // create payload
+   const token = jwt.sign({
+       _id: existingUser._id,
+       email : existingUser.email
+   },'secretKey');
+
+
+   res.send(token);
 
 }
 
