@@ -1,8 +1,11 @@
 const express = require('express');
 const { Student } = require('../models/students');
 const router = express.Router();
+const authorize = require('../middlewares/authorize');
+const admin = require('../middlewares/admin');
 
 const studentList = async (req, res) => {
+    
     const students = await Student.find()
         .sort({ name: 1 });
     res.send(students);
@@ -10,6 +13,7 @@ const studentList = async (req, res) => {
 
 const newStudent = async (req, res) => {
     const student = new Student(req.body);
+    
     try {
         const result = await student.save();
         res.send(result);
@@ -56,19 +60,19 @@ const studentDelete = async (req, res) => {
         const student = await Student.findByIdAndDelete(id);
         if (!student) return res.status(404).send('ID not found!');
         res.send(student);
-
+ 
     } catch (err) {
         return res.status(404).send('ID not found!');
     }
 };
 
-router.route('/')
-    .get(studentList)
-    .post(newStudent);
-
+router.route('/studentList').get(authorize , studentList)
+router.route('/newStudent').post( newStudent)
+   
+// evabeo lekha jay
 router.route('/:id')
     .get(studentDetail)
     .put(studentUpdate)
-    .delete(studentDelete);
+    .delete([authorize, admin], studentDelete);
 
 module.exports = router;
