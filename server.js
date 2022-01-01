@@ -1,15 +1,16 @@
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({ path: './config.env' });
 const app = require('./app');
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_SERVER, {
+mongoose.connect('mongodb://localhost:27017/my-student-2', {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
+    useUnifiedTopology: true
 })
     .then(() => console.log("Connected to MongoDB!"))
-    .catch(err => console.log("MongoDB Connection Failed!"));
+    .catch(err => console.error("MongoDB Connection Failed!"));
+
+    
 
 const port = process.env.PORT || 3001;
 
