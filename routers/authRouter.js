@@ -25,15 +25,16 @@ const authUser = async(req, res) => {
    if(!validUser){
        return res.status(400).send("User not found! User naming or password is incorrect!");
    }
-  
+
    // create payload
-   const token = jwt.sign({
-       _id: existingUser._id,
-       email : existingUser.email
-   }, process.env.JwtSecretKey);
+   const token = existingUser.generateJWT();
+   res.send({
+       token : token,
+       status : 200
+    });
 
 
-   res.send(token);
+   
 
 }
 

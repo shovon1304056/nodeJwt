@@ -27,13 +27,17 @@ const newUser = async(req, res) => {
     reqData.password = await bcrypt.hash(reqData.password, salt);
 
     let user = new User(reqData);
-
+    
+      
     try{
         const result = await user.save();
-
+        
+        const token = user.generateJWT();
+        
         res.send({
             message: `User  ${result.name} created successfully!`,
-            data: result
+            data: result,
+            token: token
         });
 
     } catch (err) {
